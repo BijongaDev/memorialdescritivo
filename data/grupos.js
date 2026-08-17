@@ -32,7 +32,7 @@ window.GRUPOS = [
     descricao: 'Derivados de petróleo e petroquímicos: solventes, bases ' +
                'lubrificantes e aromáticos.',
     chip: 'Refino · Petroquímica',
-    status: 'breve'
+    status: 'pronto'
   },
   {
     slug: 'aquecidos',

@@ -197,15 +197,28 @@
     var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" ' +
               'aria-label="Balanço de massa do processamento">';
 
-    // bloco de entrada
+    /* Bloco de entrada. O rótulo vem de cfg.entrada — nada de texto fixo aqui:
+       a base muda por grupo (kg de soja, litros de petróleo, kg de metanol
+       bruto) e conteúdo mora nos arquivos de dados, não no gerador. */
+    var entrada = cfg.entrada || {};
+    var cxEnt = r(xEnt + wEnt / 2);
+    var meioEnt = topo + altura / 2;
+    // até 3 linhas: um rótulo comprido degrada quebrando, não truncando
+    var rotuloEnt = entrada.rotulo ? quebrar(entrada.rotulo, 12, 3) : [];
+    var recuo = (rotuloEnt.length - 1) * 5.5;   // centra o conjunto no bloco
+    var yValor = rotuloEnt.length ? meioEnt - 5 - recuo : meioEnt + 8;
+
     svg += '<rect x="' + xEnt + '" y="' + topo + '" width="' + wEnt + '" ' +
            'height="' + altura + '" rx="5" fill="var(--navy)"/>';
-    svg += '<text x="' + r(xEnt + wEnt / 2) + '" y="' + r(topo + altura / 2 - 4) + '" ' +
+    svg += '<text x="' + cxEnt + '" y="' + r(yValor) + '" ' +
            'text-anchor="middle" font-family="var(--fonte)" font-size="22" ' +
-           'font-weight="700" fill="#fff">100</text>';
-    svg += '<text x="' + r(xEnt + wEnt / 2) + '" y="' + r(topo + altura / 2 + 14) + '" ' +
-           'text-anchor="middle" font-family="var(--fonte)" font-size="11" ' +
-           'font-weight="600" fill="var(--amarelo)">kg de soja</text>';
+           'font-weight="700" fill="#fff">' +
+           esc(entrada.valor != null ? num(entrada.valor, 0) : '100') + '</text>';
+    rotuloEnt.forEach(function (ln, i) {
+      svg += '<text x="' + cxEnt + '" y="' + r(meioEnt + 11 - recuo + i * 11) + '" ' +
+             'text-anchor="middle" font-family="var(--fonte)" font-size="10" ' +
+             'font-weight="600" fill="var(--amarelo)">' + esc(ln) + '</text>';
+    });
 
     var yL = topo;   // cursor do lado da entrada (contíguo)
     var yR = topo;   // cursor do lado da saída (com folga entre fitas)

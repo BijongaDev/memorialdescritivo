@@ -234,6 +234,7 @@ window.MEMORIAIS['metanol'] = {
 
     rendimento: {
       base: 'Para cada 100 kg de metanol bruto que sai do reator',
+      entrada: { valor: 100, rotulo: 'kg de metanol' },
       saidas: [
         { nome: 'Metanol grau AA',   percentual: 95.5, unidade: 'kg', cor: 'var(--serie-1)' },
         { nome: 'Água de processo',  percentual: 3.2,  unidade: 'kg', cor: 'var(--serie-5)' },

@@ -203,6 +203,7 @@ window.MEMORIAIS['oleo-vegetal'] = {
 
     rendimento: {
       base: 'Para cada 100 kg de soja processada',
+      entrada: { valor: 100, rotulo: 'kg de soja' },
       saidas: [
         { nome: 'Farelo proteico', percentual: 78.5, unidade: 'kg', cor: 'var(--serie-2)' },
         { nome: 'Óleo bruto',      percentual: 18.5, unidade: 'kg', cor: 'var(--serie-4)' },

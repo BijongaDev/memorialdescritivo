@@ -187,20 +187,23 @@
        produto importado as origens são países: mapaBrasil devolve '' e a
        seção passa a uma coluna só. */
     var mapaSvg = window.CHARTS.mapaBrasil(regioes);
-    var corpo;
+
+    /* A rota, quando existe, vem em cima e ocupa a largura toda — os dois
+       coexistem: um grupo pode ter parque produtor nacional (mapa) e parcela
+       importada (rota) na mesma seção. */
+    var corpo = (d.rota && d.rota.length ? blocoRota(d) : '');
 
     if (mapaSvg) {
-      corpo = '<div class="origem">' +
-              '<figure class="mapa">' + mapaSvg + escalaMapa() +
-              (d.legendaMapa
-                ? '<figcaption class="mapa__legenda">' + esc(d.legendaMapa) + '</figcaption>'
-                : '') +
-              '</figure>' +
-              '<ul class="regioes">' + lista + '</ul>' +
-              '</div>';
+      corpo += '<div class="origem">' +
+               '<figure class="mapa">' + mapaSvg + escalaMapa() +
+               (d.legendaMapa
+                 ? '<figcaption class="mapa__legenda">' + esc(d.legendaMapa) + '</figcaption>'
+                 : '') +
+               '</figure>' +
+               '<ul class="regioes">' + lista + '</ul>' +
+               '</div>';
     } else {
-      corpo = (d.rota && d.rota.length ? blocoRota(d) : '') +
-              '<ul class="regioes">' + lista + '</ul>';
+      corpo += '<ul class="regioes">' + lista + '</ul>';
     }
 
     // A malha é do IBGE: a atribuição entra automaticamente, para não depender

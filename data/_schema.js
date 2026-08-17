@@ -113,7 +113,12 @@ window.MEMORIAL_SCHEMA = {
 
     // Balanço de massa animado. A soma de `percentual` deve fechar em 100.
     rendimento: {
-      base: 'Para cada 100 kg de soja processada',   // rótulo da entrada
+      base: 'Para cada 100 kg de soja processada',   // texto em HTML, acima do gráfico
+
+      /* Rótulo DENTRO do bloco de entrada do gráfico. Obrigatório na prática:
+         sem ele o bloco mostra só o número. Mantenha curto — é quebrado em até
+         duas linhas de ~12 caracteres. */
+      entrada: { valor: 100, rotulo: 'kg de soja' },
       saidas: [
         { nome: 'Farelo', percentual: 78.5, unidade: 'kg', cor: 'var(--serie-2)' }
       ]
