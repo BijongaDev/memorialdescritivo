@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Memoriais Descritivos · Cattalini</title>
+<meta name="description" content="Memoriais descritivos interativos dos grupos de produto movimentados pelo Terminal Cattalini, em Paranaguá (PR).">
+
+<link rel="icon" href="assets/icons/cattalini.svg" type="image/svg+xml">
+
+<!-- Inter via Google Fonts. Se não houver rede, o fallback do sistema assume. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body data-view="hub">
+
+<!-- =====================================================================
+     Barra superior — persistente nas duas views
+     ===================================================================== -->
+<header class="topo">
+  <div class="container topo__interno">
+    <button class="btn-voltar" id="btn-voltar" type="button">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M13 8H3M7 4L3 8l4 4"/>
+      </svg>
+      Voltar ao hub
+    </button>
+
+    <p class="marca">
+      <span class="marca__ponto" aria-hidden="true"></span>
+      Cattalini
+      <span class="marca__sub">Memoriais Descritivos</span>
+    </p>
+
+    <div class="topo__meio">
+      <p class="topo__titulo" id="topo-titulo"></p>
+    </div>
+  </div>
+
+  <div class="progresso" aria-hidden="true">
+    <div class="progresso__barra" id="progresso-barra"></div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===================================================================
+       NÍVEL 1 — HUB
+       =================================================================== -->
+  <div class="view" id="view-hub">
+
+    <section class="hub-capa">
+      <div class="hub-capa__grade" aria-hidden="true"></div>
+      <div class="container hub-capa__interno">
+        <p class="eyebrow">Terminal Cattalini · Paranaguá, PR</p>
+        <h1>A cadeia de cada <em>granel líquido</em> que passa pelo cais</h1>
+        <p class="hub-capa__texto">
+          Um memorial descritivo por grupo de produto: de onde vem a
+          matéria-prima, como ela é transformada, o que mais sai do processo,
+          quanto o Brasil produz e consome, e para onde o produto vai.
+          Todo número traz fonte e ano.
+        </p>
+        <div class="hub-capa__meta">
+          <span class="selo">Granéis líquidos</span>
+          <span class="selo">Origem · Processo · Balanço · Destino</span>
+          <span class="selo">Fontes públicas declaradas</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="hub-grupos">
+      <div class="container">
+        <div class="hub-grupos__cabeca">
+          <div>
+            <p class="eyebrow">Escolha um grupo</p>
+            <h2>Grupos de produto movimentados</h2>
+          </div>
+          <p class="hub-grupos__contagem" id="contagem-grupos"></p>
+        </div>
+
+        <!-- Cards montados por js/app.js a partir de data/grupos.js -->
+        <div class="grade-cards" id="grade-cards"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ===================================================================
+       NÍVEL 2 — MEMORIAIS
+       Cada memorial é montado sob demanda por js/render.js na primeira
+       visita e depois apenas mostrado/escondido.
+       =================================================================== -->
+  <div class="view" id="view-memorial"></div>
+
+</main>
+
+<footer class="pe">
+  <div class="container pe__interno">
+    <div>
+      <strong>Memoriais Descritivos · Cattalini</strong>
+      <p>
+        Material de apoio comercial. Os balanços apresentados são estimativas
+        de fontes públicas e setoriais, sujeitas a revisão pelas próprias
+        entidades emissoras.
+      </p>
+    </div>
+    <div class="pe__fontes">
+      <strong>Fontes consultadas</strong>
+      <p>
+        <span>ABIOVE</span> · <span>CONAB</span> · <span>ANP</span> ·
+        <span>StoneX</span> · <span>Comex Stat</span> · <span>ABIQUIM</span>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- =====================================================================
+     Scripts — ordem importa
+       1. charts.js  define window.CHARTS (usado por render.js na carga)
+       2. render.js  define window.RENDER
+       3. data/*.js  registram window.GRUPOS e window.MEMORIAIS[slug]
+       4. app.js     roteia e monta
+
+     Um <script> por grupo de produto. Para publicar um novo memorial:
+     crie data/<slug>.js, adicione a tag abaixo e troque o status do grupo
+     para 'pronto' em data/grupos.js.
+
+     Sem fetch() em JSON: assim a página abre com duplo clique, em file://.
+     ===================================================================== -->
+<script src="js/charts.js"></script>
+<script src="js/render.js"></script>
+
+<script src="data/grupos.js"></script>
+<script src="data/oleo-vegetal.js"></script>
+<!-- <script src="data/metanol.js"></script> -->
+<!-- <script src="data/derivados.js"></script> -->
+<!-- <script src="data/aquecidos.js"></script> -->
+<!-- <script src="data/soda-caustica.js"></script> -->
+<!-- <script src="data/biocombustiveis.js"></script> -->
+<!-- <script src="data/outros.js"></script> -->
+
+<script src="js/app.js"></script>
+</body>
+</html>
