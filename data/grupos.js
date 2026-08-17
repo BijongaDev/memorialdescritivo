@@ -68,6 +68,6 @@ window.GRUPOS = [
     descricao: 'Granéis líquidos especiais movimentados sob demanda, de ' +
                'glicerina a óleos de base biológica.',
     chip: 'Especialidades',
-    status: 'breve'
+    status: 'pronto'
   }
 ];

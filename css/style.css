@@ -1365,6 +1365,8 @@ body[data-view="memorial"] .btn-voltar { display: inline-flex; }
 }
 .is-visivel .setor__barra i { width: var(--w, 0%); }
 .setor__desc { font-size: .8125rem; color: var(--texto-suave); }
+/* Sem barra, o título precisa da folga que a barra dava. */
+.setor--sem-share .setor__topo { margin-bottom: 8px; }
 
 .destinos { }
 .destino {

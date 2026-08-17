@@ -164,21 +164,25 @@
     var regioes = d.regioes || [];
     var maxPart = maiorDe(regioes, 'participacao');
 
+    /* `participacao` é opcional: sem ela não há barra nem "% do total". Um
+       grupo pode listar origens que não são comparáveis entre si — inventar
+       um percentual só para preencher a barra seria pior que não ter. */
     var lista = regioes.map(function (rg) {
-      var largura = ((rg.participacao || 0) / maxPart) * 100;
+      var temPart = typeof rg.participacao === 'number';
       var meta = [];
       if (rg.unidade) meta.push(esc(rg.unidade));
-      if (typeof rg.participacao === 'number') {
-        meta.push(esc(num(rg.participacao)) + '% do total');
-      }
+      if (temPart) meta.push(esc(num(rg.participacao)) + '% do total');
+
       return '<li class="regiao">' +
              '<p class="regiao__nome">' + esc(rg.nome) +
              (rg.uf ? '<span class="regiao__uf">' + esc(rg.uf) + '</span>' : '') + '</p>' +
              '<p class="regiao__valor">' +
              (typeof rg.valor === 'number' ? esc(num(rg.valor)) : '') +
              (meta.length ? '<small>' + meta.join(' · ') + '</small>' : '') + '</p>' +
-             '<div class="regiao__barra" style="--w:' + largura.toFixed(1) + '%">' +
-             '<i></i></div>' +
+             (temPart
+               ? '<div class="regiao__barra" style="--w:' +
+                 ((rg.participacao / maxPart) * 100).toFixed(1) + '%"><i></i></div>'
+               : '') +
              (rg.detalhe ? '<p class="regiao__detalhe">' + esc(rg.detalhe) + '</p>' : '') +
              '</li>';
     }).join('');
@@ -364,13 +368,20 @@
     var comMapa = false;
 
     if (d.setores && d.setores.length) {
+      // Mesma regra da §1: sem `participacao`, sem número e sem barra.
       var setores = d.setores.map(function (s) {
-        return '<div class="setor">' +
+        var temPart = typeof s.participacao === 'number';
+        return '<div class="setor' + (temPart ? '' : ' setor--sem-share') + '">' +
                '<div class="setor__topo">' +
                '<span class="setor__nome">' + esc(s.nome) + '</span>' +
-               '<span class="setor__share">' + esc(num(s.participacao, 0)) + '%</span></div>' +
-               '<div class="setor__barra" style="--w:' +
-               (s.participacao || 0).toFixed(1) + '%"><i></i></div>' +
+               (temPart
+                 ? '<span class="setor__share">' + esc(num(s.participacao, 0)) + '%</span>'
+                 : '') +
+               '</div>' +
+               (temPart
+                 ? '<div class="setor__barra" style="--w:' +
+                   s.participacao.toFixed(1) + '%"><i></i></div>'
+                 : '') +
                (s.descricao ? '<p class="setor__desc">' + esc(s.descricao) + '</p>' : '') +
                '</div>';
       }).join('');
