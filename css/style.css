@@ -831,6 +831,33 @@ body[data-view="memorial"] .btn-voltar { display: inline-flex; }
   .mapa { position: relative; top: auto; }
 }
 
+/* O mapa da §5 fica dentro de uma coluna, com a lista de destinos logo abaixo:
+   aqui não pode ser sticky. */
+.mapa--destinos {
+  position: relative;
+  top: auto;
+  margin-bottom: 20px;
+}
+
+/* Rota de importação (§1 dos grupos importados). Mesma moldura do fluxograma
+   de processo, mas sem o display:none no celular — ver blocoRota em render.js. */
+.rota {
+  border: 1px solid var(--linha);
+  border-radius: var(--r-md);
+  background: var(--branco);
+  padding: clamp(16px, 2.5vw, 26px);
+  margin-bottom: clamp(26px, 3.5vw, 38px);
+}
+.rota svg { width: 100%; height: auto; }
+.rota__legenda {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--cinza-100);
+  font-size: .6875rem;
+  line-height: 1.5;
+  color: var(--navy-300);
+}
+
 .regioes { display: flex; flex-direction: column; }
 .regiao {
   display: grid;
@@ -1277,6 +1304,27 @@ body[data-view="memorial"] .btn-voltar { display: inline-flex; }
   align-items: start;
 }
 @media (max-width: 860px) { .mercados { grid-template-columns: minmax(0, 1fr); } }
+
+/* Variante com mapa (produto importado): empilha, para a coluna de destinos
+   não ficar o dobro da altura da de setores. Ver secaoMercados em render.js. */
+.mercados--com-mapa {
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(34px, 5vw, 56px);
+}
+.mercados--com-mapa .setores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(224px, 1fr));
+  gap: 14px;
+}
+.mercados__geo {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(24px, 4vw, 48px);
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .mercados__geo { grid-template-columns: minmax(0, 1fr); }
+}
 
 .setores { display: flex; flex-direction: column; gap: 14px; }
 .setor {

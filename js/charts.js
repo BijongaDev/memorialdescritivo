@@ -321,6 +321,10 @@
    * regioes = [{ uf, nome, valor, unidade, participacao, mapaRotulo? }]
    * Entradas cuja sigla não existe na malha são ignoradas sem erro — é o caso
    * de linhas agregadas como "Demais estados".
+   *
+   * Devolve string VAZIA quando nenhuma entrada casa com uma UF. É assim que
+   * grupos de produto importado (metanol, soda) simplesmente não ganham mapa
+   * na seção de origem: quem chama testa o retorno e ajusta o layout.
    */
   function mapaBrasil(regioes) {
     var malha = window.MALHA_UF;
@@ -329,13 +333,17 @@
 
     var destaque = {};
     var max = 0;
+    var casaram = 0;
     (regioes || []).forEach(function (rg) {
       var uf = String(rg.uf || '').toUpperCase();
       if (!estados[uf]) return;
       destaque[uf] = rg;
+      casaram++;
       var p = rg.participacao || 0;
       if (p > max) max = p;
     });
+
+    if (!casaram) return '';
 
     var formas = '', rotulos = '';
 

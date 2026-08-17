@@ -70,6 +70,17 @@ window.MEMORIAL_SCHEMA = {
     ],
     legendaMapa: 'Nota de leitura do mapa.',   // [opcional]
 
+    /* PRODUTO IMPORTADO: se nenhuma entrada de `regioes` tiver `uf` (ou nenhuma
+       casar com a malha), o mapa do Brasil não é desenhado e a seção vira uma
+       coluna só — as origens são países. Nesse caso vale preencher `rota`, que
+       ocupa o lugar do mapa com o caminho da carga até o cais.
+       Nomes curtos: entram dentro dos nós do SVG. 4 a 7 etapas funcionam bem. */
+    rota: [                             // [opcional]
+      { nome: 'Planta de metanol' },
+      { nome: 'Paranaguá', marco: true }  // marco: true = nó em navy
+    ],
+    legendaRota: 'Nota de leitura da rota.',   // [opcional]
+
     /* A fonte da malha (IBGE) é anexada automaticamente pelo render sempre que
        o mapa é desenhado — não precisa repetir aqui. */
     fontes: [{ org: 'CONAB', serie: 'Levantamento de Safra', ano: '2023/24' }]
@@ -169,15 +180,22 @@ window.MEMORIAL_SCHEMA = {
       }
     ],
 
-    // Coluna direita: para onde vai, fora do Brasil.
+    /* Coluna direita: para onde vai. Em produto de exportação são países; em
+       produto importado, cujo consumo é que é brasileiro, podem ser UFs.
+
+       Se alguma entrada tiver `uf` casando com a malha, a §5 desenha o mapa
+       coroplético do IBGE acima da lista — é por isso que o mapa não vive
+       preso à §1: o metanol usa rota de importação na §1 e mapa na §5. */
     destinos: [                         // [opcional]
       {
-        pais: 'Índia',
+        nome: 'Índia',                  // preferido; `pais` ainda é aceito
+        uf: 'MT',                       // [opcional] pinta a UF no mapa da §5
         valor: 494,                     // [opcional]
         unidade: 'mil t',               // [opcional]
         participacao: 38                // 0–100
       }
     ],
+    legendaMapa: 'Nota de leitura do mapa da §5.',   // [opcional]
     tituloSetores: 'Consumo interno por setor',   // [opcional]
     tituloDestinos: 'Destinos de exportação',     // [opcional]
     fontes: [{ org: 'Comex Stat', serie: 'Exportações', ano: '2024' }]

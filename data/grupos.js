@@ -23,7 +23,7 @@ window.GRUPOS = [
     descricao: 'Insumo químico importado, base do biodiesel brasileiro e da ' +
                'cadeia de resinas e formaldeído.',
     chip: 'Importação · Química',
-    status: 'breve'
+    status: 'pronto'
   },
   {
     slug: 'derivados',

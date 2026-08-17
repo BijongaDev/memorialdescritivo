@@ -183,31 +183,59 @@
              '</li>';
     }).join('');
 
-    // Escala do coroplético. Os degraus usam as mesmas classes n1..n5 do SVG.
+    /* O mapa só existe quando as origens são UFs brasileiras. Em grupo de
+       produto importado as origens são países: mapaBrasil devolve '' e a
+       seção passa a uma coluna só. */
+    var mapaSvg = window.CHARTS.mapaBrasil(regioes);
+    var corpo;
+
+    if (mapaSvg) {
+      corpo = '<div class="origem">' +
+              '<figure class="mapa">' + mapaSvg + escalaMapa() +
+              (d.legendaMapa
+                ? '<figcaption class="mapa__legenda">' + esc(d.legendaMapa) + '</figcaption>'
+                : '') +
+              '</figure>' +
+              '<ul class="regioes">' + lista + '</ul>' +
+              '</div>';
+    } else {
+      corpo = (d.rota && d.rota.length ? blocoRota(d) : '') +
+              '<ul class="regioes">' + lista + '</ul>';
+    }
+
+    // A malha é do IBGE: a atribuição entra automaticamente, para não depender
+    // de cada arquivo de dados lembrar de citá-la.
+    var fonteMalha = mapaSvg && window.MALHA_UF && window.MALHA_UF.fonte
+      ? [window.MALHA_UF.fonte] : null;
+
+    return envolveSecao(id, 1, d, corpo, fonteMalha);
+  }
+
+  /** Escala do coroplético. Os degraus usam as mesmas classes n1..n5 do SVG. */
+  function escalaMapa() {
     var degraus = '';
     for (var n = 1; n <= window.CHARTS.niveisMapa(); n++) {
       degraus += '<i class="n' + n + '"></i>';
     }
-    var escala = '<div class="mapa__escala">' +
-                 '<span>menor</span>' +
-                 '<span class="mapa__escala-degraus">' + degraus + '</span>' +
-                 '<span>maior participação</span></div>';
+    return '<div class="mapa__escala">' +
+           '<span>menor</span>' +
+           '<span class="mapa__escala-degraus">' + degraus + '</span>' +
+           '<span>maior participação</span></div>';
+  }
 
-    var corpo = '<div class="origem">' +
-                '<figure class="mapa">' + window.CHARTS.mapaBrasil(regioes) + escala +
-                (d.legendaMapa
-                  ? '<figcaption class="mapa__legenda">' + esc(d.legendaMapa) + '</figcaption>'
-                  : '') +
-                '</figure>' +
-                '<ul class="regioes">' + lista + '</ul>' +
-                '</div>';
-
-    // A malha é do IBGE: a atribuição entra automaticamente, para não depender
-    // de cada arquivo de dados lembrar de citá-la.
-    var fonteMalha = window.MALHA_UF && window.MALHA_UF.fonte
-      ? [window.MALHA_UF.fonte] : null;
-
-    return envolveSecao(id, 1, d, corpo, fonteMalha);
+  /**
+   * Rota de importação: origem -> travessia -> cais -> cliente.
+   * Reaproveita o gerador de fluxograma. Diferente do fluxograma de processo,
+   * a rota NÃO é escondida no celular — aqui não existe uma lista de etapas em
+   * HTML repetindo a informação, então ela desliza na horizontal.
+   */
+  function blocoRota(d) {
+    return '<figure class="rota">' +
+           rolavel(window.CHARTS.fluxograma(d.rota)) +
+           (d.legendaRota
+             ? '<figcaption class="rota__legenda">' + esc(d.legendaRota) + '</figcaption>'
+             : '') +
+           '</figure>';
   }
 
   /* ------------------------------------------ 4. §2 fluxograma de produção */
@@ -329,6 +357,8 @@
 
   function secaoMercados(id, d) {
     var colunas = '';
+    var fontesRender = null;   // fontes de assets usados na renderização
+    var comMapa = false;
 
     if (d.setores && d.setores.length) {
       var setores = d.setores.map(function (s) {
@@ -352,7 +382,7 @@
         var largura = ((x.participacao || 0) / maxPart) * 100;
         return '<li class="destino">' +
                '<span class="destino__pos">' + (i + 1 < 10 ? '0' : '') + (i + 1) + '</span>' +
-               '<span class="destino__pais">' + esc(x.pais) + '</span>' +
+               '<span class="destino__pais">' + esc(x.nome || x.pais) + '</span>' +
                '<span class="destino__valor">' +
                (typeof x.participacao === 'number' ? esc(num(x.participacao, 0)) + '%' : '') +
                (typeof x.valor === 'number'
@@ -362,15 +392,55 @@
                '%"><i></i></span>' +
                '</li>';
       }).join('');
+      /* Quando os destinos são UFs — caso dos importados, cuja demanda é que é
+         brasileira — a mesma malha do IBGE serve aqui. É por isso que o mapa
+         não vive preso à §1. */
+      var mapaDestinos = window.CHARTS.mapaBrasil(d.destinos);
+      if (mapaDestinos) {
+        mapaDestinos = '<figure class="mapa mapa--destinos">' + mapaDestinos +
+                       escalaMapa() +
+                       (d.legendaMapa
+                         ? '<figcaption class="mapa__legenda">' +
+                           esc(d.legendaMapa) + '</figcaption>'
+                         : '') +
+                       '</figure>';
+        fontesRender = window.MALHA_UF && window.MALHA_UF.fonte
+          ? [window.MALHA_UF.fonte] : null;
+        comMapa = true;
+      }
+
       colunas += '<div><h4 class="bloco__titulo">' +
                  esc(d.tituloDestinos || 'Destinos de exportação') + '</h4>' +
-                 '<ul class="destinos">' + destinos + '</ul></div>';
+                 (mapaDestinos
+                   ? '<div class="mercados__geo">' + mapaDestinos +
+                     '<ul class="destinos">' + destinos + '</ul></div>'
+                   : '<ul class="destinos">' + destinos + '</ul>') +
+                 '</div>';
     }
 
-    return envolveSecao(id, 5, d, '<div class="mercados">' + colunas + '</div>');
+    /* Sem mapa, setores e destinos dividem a seção em duas colunas. Com mapa, a
+       coluna de destinos fica muito mais alta que a de setores e o desequilíbrio
+       aparece: então empilha — setores viram uma faixa de cards e o mapa vai ao
+       lado da lista. Quem decide é o CSS, a partir desta classe. */
+    return envolveSecao(id, 5, d,
+      '<div class="mercados' + (comMapa ? ' mercados--com-mapa' : '') + '">' +
+      colunas + '</div>', fontesRender);
   }
 
   /* ------------------------------------------------- 8. fontes consolidadas */
+
+  /**
+   * Fonte da malha do IBGE, se algum mapa foi desenhado neste memorial.
+   * O mapa pode estar na §1 (origem em UFs) ou na §5 (demanda em UFs, caso dos
+   * importados), então a checagem é feita nos dois lugares.
+   */
+  function fonteDaMalha(d) {
+    if (!window.MALHA_UF || !window.MALHA_UF.fonte) return null;
+    var temMapa =
+      (d.origem && window.CHARTS.mapaBrasil(d.origem.regioes)) ||
+      (d.mercados && window.CHARTS.mapaBrasil(d.mercados.destinos));
+    return temMapa ? [window.MALHA_UF.fonte] : null;
+  }
 
   /**
    * Lista completa das fontes do memorial, no fim da página.
@@ -476,7 +546,7 @@
                navSecoes(slug, indice) +
                '<div class="memorial__secoes">' + secoes + '</div>' +
                '</div>' +
-               fontesGerais(d, window.MALHA_UF && d.origem ? [window.MALHA_UF.fonte] : null) +
+               fontesGerais(d, fonteDaMalha(d)) +
                pe(slug, grupos) +
                '</article>';
 
