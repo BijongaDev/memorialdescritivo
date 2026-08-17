@@ -421,12 +421,16 @@
                  '</div>';
     }
 
-    /* Sem mapa, setores e destinos dividem a seção em duas colunas. Com mapa, a
-       coluna de destinos fica muito mais alta que a de setores e o desequilíbrio
-       aparece: então empilha — setores viram uma faixa de cards e o mapa vai ao
-       lado da lista. Quem decide é o CSS, a partir desta classe. */
+    /* Duas colunas iguais só funcionam quando setores e destinos existem e têm
+       altura parecida. Com mapa, a coluna de destinos fica muito mais alta; com
+       apenas um dos blocos, a outra coluna fica vazia. Nos dois casos, empilha —
+       os setores viram uma faixa de cards. Quem decide é o CSS. */
+    var temSetores  = !!(d.setores && d.setores.length);
+    var temDestinos = !!(d.destinos && d.destinos.length);
+    var empilhado = comMapa || (temSetores !== temDestinos);
+
     return envolveSecao(id, 5, d,
-      '<div class="mercados' + (comMapa ? ' mercados--com-mapa' : '') + '">' +
+      '<div class="mercados' + (empilhado ? ' mercados--empilhado' : '') + '">' +
       colunas + '</div>', fontesRender);
   }
 

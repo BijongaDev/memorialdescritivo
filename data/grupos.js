@@ -41,7 +41,7 @@ window.GRUPOS = [
     descricao: 'Produtos que exigem tancagem aquecida e serpentina: parafinas, ' +
                'asfaltos, óleo de palma e gorduras.',
     chip: 'Tancagem aquecida',
-    status: 'breve'
+    status: 'pronto'
   },
   {
     slug: 'soda-caustica',
