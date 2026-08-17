@@ -59,7 +59,7 @@ window.GRUPOS = [
     descricao: 'Etanol, biodiesel e a nova fronteira de combustíveis de baixo ' +
                'carbono para exportação.',
     chip: 'Etanol · Biodiesel · SAF',
-    status: 'breve'
+    status: 'pronto'
   },
   {
     slug: 'outros',
