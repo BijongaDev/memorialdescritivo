@@ -45,20 +45,33 @@ window.MEMORIAL_SCHEMA = {
     titulo: 'Origem da matéria-prima',
     intro: 'Parágrafo de abertura da seção.',
 
-    // Ranking de regiões produtoras. `participacao` alimenta as barras;
-    // `mapa` posiciona o ponto no mapa esquemático do Brasil.
+    /* Ranking de regiões produtoras. `participacao` alimenta as barras da
+       lista E a intensidade de cor da UF no mapa (escala relativa ao maior
+       valor da lista, em 5 degraus).
+
+       O mapa usa a malha estadual oficial do IBGE (data/malha-uf.js): basta
+       a sigla em `uf` — a forma e a posição do rótulo vêm da malha, não há
+       coordenada para informar à mão.
+
+       Linhas agregadas ("Demais estados") podem usar uma sigla que não existe
+       na malha, como 'BR': aparecem na lista e são ignoradas no mapa. */
     regioes: [
       {
         nome: 'Mato Grosso',
-        uf: 'MT',                       // [opcional] sigla no chip
+        uf: 'MT',                       // [opcional] sigla; pinta a UF no mapa
         valor: 39.4,                    // [opcional] volume
         unidade: 'Mt',                  // [opcional]
-        participacao: 26.7,             // 0–100, usado na barra
+        participacao: 26.7,             // 0–100: barra da lista + cor no mapa
         detalhe: 'Uma frase de contexto.',   // [opcional]
-        mapa: { x: 37, y: 48 }          // [opcional] 0–100 sobre o mapa
+        mapaRotulo: { x: 47, y: 45 }     // [opcional] só para deslocar o rótulo
+                                         // de uma UF pequena; o padrão é o
+                                         // centroide calculado da malha
       }
     ],
-    legendaMapa: 'O que os pontos representam. Mapa esquemático.', // [opcional]
+    legendaMapa: 'Nota de leitura do mapa.',   // [opcional]
+
+    /* A fonte da malha (IBGE) é anexada automaticamente pelo render sempre que
+       o mapa é desenhado — não precisa repetir aqui. */
     fontes: [{ org: 'CONAB', serie: 'Levantamento de Safra', ano: '2023/24' }]
   },
 

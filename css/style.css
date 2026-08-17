@@ -40,6 +40,16 @@
   --serie-4: #F5C400;
   --serie-5: #C9CEDC;
 
+  /* Escala sequencial do mapa coroplético. n0 = UF sem dado declarado; o salto
+     n0 -> n1 é propositalmente largo, para uma UF de participação baixa não se
+     confundir com uma UF sem dado. */
+  --mapa-n0: #F0F2F7;
+  --mapa-n1: #C6CFE4;
+  --mapa-n2: #AAB5D2;
+  --mapa-n3: #7C8AB5;
+  --mapa-n4: #47588F;
+  --mapa-n5: #14204A;
+
   /* Tipografia */
   --fonte: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
            Helvetica, Arial, sans-serif;
@@ -755,33 +765,58 @@ body[data-view="memorial"] .btn-voltar { display: inline-flex; }
   padding: 18px;
 }
 .mapa svg { width: 100%; height: auto; overflow: visible; }
-.mapa__silhueta {
-  fill: var(--cinza-100);
-  stroke: var(--cinza-300);
-  stroke-width: .5;
+
+/* Escala sequencial do coroplético. n0 = UF sem participação declarada. */
+.mapa__uf {
+  fill: var(--mapa-n0);
+  stroke: var(--branco);
+  stroke-width: .32;
+  stroke-linejoin: round;
+  transition: fill var(--t-base) var(--ease);
 }
-.mapa__ponto circle.halo {
-  fill: var(--amarelo);
-  opacity: .28;
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: pulso 2.6s var(--ease) infinite;
-}
-.mapa__ponto circle.nucleo { fill: var(--navy); }
-.mapa__ponto text {
+.mapa__uf.n1 { fill: var(--mapa-n1); }
+.mapa__uf.n2 { fill: var(--mapa-n2); }
+.mapa__uf.n3 { fill: var(--mapa-n3); }
+.mapa__uf.n4 { fill: var(--mapa-n4); }
+.mapa__uf.n5 { fill: var(--mapa-n5); }
+.mapa__uf:hover { stroke: var(--amarelo); stroke-width: .7; }
+
+.mapa__rotulos { pointer-events: none; }
+.mapa__rotulo {
   font-family: var(--fonte);
-  font-size: 3.1px;
+  font-size: 2.7px;
   font-weight: 700;
   fill: var(--navy);
+  text-anchor: middle;
   paint-order: stroke;
   stroke: var(--branco);
-  stroke-width: .9px;
+  stroke-width: .8px;
   stroke-linejoin: round;
 }
-@keyframes pulso {
-  0%, 100% { transform: scale(1);   opacity: .30; }
-  50%      { transform: scale(1.9); opacity: .06; }
+/* Sobre os dois degraus mais escuros o texto inverte e dispensa o halo. */
+.mapa__rotulo.is-claro { fill: var(--branco); stroke: none; }
+
+/* Legenda da escala */
+.mapa__escala {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  font-size: .625rem;
+  color: var(--navy-300);
 }
+.mapa__escala-degraus { display: flex; gap: 2px; }
+.mapa__escala i {
+  width: 17px;
+  height: 7px;
+  border-radius: 2px;
+}
+.mapa__escala i.n1 { background: var(--mapa-n1); }
+.mapa__escala i.n2 { background: var(--mapa-n2); }
+.mapa__escala i.n3 { background: var(--mapa-n3); }
+.mapa__escala i.n4 { background: var(--mapa-n4); }
+.mapa__escala i.n5 { background: var(--mapa-n5); }
+
 .mapa__legenda {
   margin-top: 12px;
   padding-top: 12px;
@@ -1338,7 +1373,48 @@ body[data-view="memorial"] .btn-voltar { display: inline-flex; }
 }
 
 /* -------------------------------------------------------------------------
-   16. Rodapé do memorial (navegação entre grupos)
+   16. Fontes consolidadas do memorial
+   ------------------------------------------------------------------------- */
+.fontes-gerais {
+  padding: clamp(40px, 6vw, 68px) 0;
+  border-top: 1px solid var(--linha);
+}
+.fontes-gerais h4 {
+  margin: 8px 0 26px;
+  font-size: clamp(1.25rem, 2.4vw, 1.5rem);
+  letter-spacing: -.02em;
+}
+.fontes-gerais__grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(216px, 1fr));
+  gap: 22px 28px;
+}
+.fonte-org { border-top: 2px solid var(--amarelo); padding-top: 12px; }
+.fonte-org__nome {
+  font-size: .875rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  margin-bottom: 7px;
+}
+.fonte-org__series li {
+  font-size: .75rem;
+  line-height: 1.5;
+  color: var(--texto-suave);
+  padding: 3px 0;
+}
+.fonte-org__series li + li { border-top: 1px solid var(--cinza-100); }
+.fontes-gerais__nota {
+  margin-top: 26px;
+  padding-top: 16px;
+  border-top: 1px solid var(--cinza-100);
+  font-size: .75rem;
+  line-height: 1.6;
+  color: var(--navy-300);
+  max-width: 78ch;
+}
+
+/* -------------------------------------------------------------------------
+   17. Rodapé do memorial (navegação entre grupos)
    ------------------------------------------------------------------------- */
 .memorial__pe {
   padding: clamp(40px, 6vw, 64px) 0;
@@ -1371,7 +1447,7 @@ body[data-view="memorial"] .btn-voltar { display: inline-flex; }
 .atalho.is-breve:hover { border-color: var(--linha); transform: none; }
 
 /* -------------------------------------------------------------------------
-   17. Rodapé global
+   18. Rodapé global
    ------------------------------------------------------------------------- */
 .pe {
   background: var(--navy);
@@ -1391,7 +1467,7 @@ body[data-view="memorial"] .btn-voltar { display: inline-flex; }
 .pe__fontes span { color: var(--branco); }
 
 /* -------------------------------------------------------------------------
-   18. Scroll reveal
+   19. Scroll reveal
    ------------------------------------------------------------------------- */
 .revelar {
   opacity: 0;
@@ -1402,10 +1478,13 @@ body[data-view="memorial"] .btn-voltar { display: inline-flex; }
 .revelar.is-visivel { opacity: 1; transform: none; }
 
 /* -------------------------------------------------------------------------
-   19. Impressão
+   20. Impressão
    ------------------------------------------------------------------------- */
 @media print {
   .topo, .secnav, .memorial__pe, .pe, .card__seta { display: none !important; }
+  /* a atribuição acompanha o material impresso, sempre */
+  .secao__fontes, .fontes-gerais { display: block !important; }
+  .fontes-gerais { break-before: auto; page-break-inside: avoid; }
   .view, .memorial { display: block !important; opacity: 1 !important; transform: none !important; }
   .revelar { opacity: 1 !important; transform: none !important; }
   .secao { break-inside: avoid; page-break-inside: avoid; }

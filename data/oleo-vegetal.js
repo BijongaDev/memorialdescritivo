@@ -48,40 +48,34 @@ window.MEMORIAIS['oleo-vegetal'] = {
         nome: 'Mato Grosso', uf: 'MT',
         valor: 39.4, unidade: 'Mt', participacao: 26.7,
         detalhe: 'Maior produtor nacional. Escoa por Paranaguá, Santos e pelo Arco Norte, ' +
-                 'com forte industrialização local voltada a farelo e biodiesel.',
-        mapa: { x: 47.2, y: 45.5 }
+                 'com forte industrialização local voltada a farelo e biodiesel.'
       },
       {
         nome: 'Rio Grande do Sul', uf: 'RS',
         valor: 21.9, unidade: 'Mt', participacao: 14.9,
         detalhe: 'Produção altamente sensível a estiagem. Abastece o parque de crush gaúcho ' +
-                 'e embarca por Rio Grande.',
-        mapa: { x: 52.0, y: 86.8 }
+                 'e embarca por Rio Grande.'
       },
       {
         nome: 'Paraná', uf: 'PR',
         valor: 19.4, unidade: 'Mt', participacao: 13.2,
         detalhe: 'Hinterlândia natural de Paranaguá. Concentra cooperativas com ' +
-                 'processamento e refino próprios, a menos de 600 km do cais.',
-        mapa: { x: 56.1, y: 76.3 }
+                 'processamento e refino próprios, a menos de 600 km do cais.'
       },
       {
         nome: 'Goiás', uf: 'GO',
         valor: 18.6, unidade: 'Mt', participacao: 12.6,
-        detalhe: 'Polo de crush integrado a biodiesel e a nutrição animal do Sudeste.',
-        mapa: { x: 62.5, y: 54.5 }
+        detalhe: 'Polo de crush integrado a biodiesel e a nutrição animal do Sudeste.'
       },
       {
         nome: 'Mato Grosso do Sul', uf: 'MS',
         valor: 13.7, unidade: 'Mt', participacao: 9.3,
-        detalhe: 'Ligado a Paranaguá por rodovia e pela malha ferroviária de bitola métrica.',
-        mapa: { x: 49.8, y: 68.6 }
+        detalhe: 'Ligado a Paranaguá por rodovia e pela malha ferroviária de bitola métrica.'
       },
       {
         nome: 'Bahia', uf: 'BA',
         valor: 8.1, unidade: 'Mt', participacao: 5.5,
-        detalhe: 'Núcleo do Matopiba no oeste do estado, com escoamento por Ilhéus e Salvador.',
-        mapa: { x: 74.0, y: 44.8 }
+        detalhe: 'Núcleo do Matopiba no oeste do estado, com escoamento por Ilhéus e Salvador.'
       },
       {
         nome: 'Demais estados', uf: 'BR',
@@ -91,8 +85,9 @@ window.MEMORIAIS['oleo-vegetal'] = {
       }
     ],
     legendaMapa:
-      'Mapa esquemático. Os pontos indicam os principais estados produtores de soja; ' +
-      'o tamanho não é proporcional ao volume.',
+      'Malha estadual oficial do IBGE. A intensidade de cor acompanha a ' +
+      'participação de cada estado na safra; passe o cursor sobre a UF para ' +
+      'ver volume e percentual.',
     fontes: [
       { org: 'CONAB', serie: 'Levantamento de Safra — grãos', ano: '2023/24' },
       { org: 'ABIOVE', serie: 'Complexo Soja — estatística mensal', ano: '2024' }

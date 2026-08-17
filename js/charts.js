@@ -308,49 +308,81 @@
 
   /* -------------------------------------------------------- 4. mapa Brasil */
 
-  /* Silhueta esquemática do Brasil, em viewBox 0 0 100 100.
-     Os vértices são pontos reais do contorno nacional (Monte Caburaí, Oiapoque,
-     Cabo Branco, Chuí, ponta oeste do Acre etc.) projetados linearmente:
-        x = (lon + 73,99) / 39,20 * 100
-        y = ( 5,27 - lat) / 39,02 * 100
-     É uma simplificação grosseira — não serve para cartografia, só para dar
-     referência visual aos pontos dos estados produtores. Para posicionar um
-     novo ponto, aplique as duas fórmulas acima às coordenadas do local. */
-  var BRASIL =
-    'M35.7,0 L36.2,2.5 L43.3,4.8 L49.7,7.6 L57.1,3 L61.2,10.9 L65,16.1 ' +
-    'L75.7,19.9 L82.1,20.9 L90.5,23 L98.9,26.8 L100,31.7 L99.7,34.1 ' +
-    'L97.7,38.3 L90.5,46.8 L89.3,51.4 L88.5,58.9 L86,65.5 L81.6,72.4 ' +
-    'L70.6,74.9 L65,78.8 L65,84.2 L55.8,95.5 L52.5,100 L43.1,90.4 ' +
-    'L49.5,79.1 L47.2,71.2 L41.8,62.2 L41.6,54.8 L35.7,48.1 L22.2,41.2 ' +
-    'L15.3,40.4 L10.2,41.7 L0,32.7 L2.8,31.7 L10.4,24.3 L11.5,16.1 ' +
-    'L17.6,12.2 L25.5,9.7 L27,3.5 Z';
+  var NIVEIS = 5;   // degraus da escala de cor; ver .mapa__uf.n1..n5 no CSS
 
   /**
-   * Mapa esquemático com pontos.
-   * pontos = [{ uf, nome, mapa: {x, y} }]
+   * Mapa coroplético do Brasil sobre a malha estadual oficial do IBGE
+   * (data/malha-uf.js, gerado por tools/gerar-malha-ibge.js).
+   *
+   * As UFs citadas em `regioes` são pintadas com intensidade proporcional a
+   * `participacao`; as demais ficam num cinza neutro. A escala é relativa ao
+   * maior valor da lista, então o degrau mais escuro é sempre o líder.
+   *
+   * regioes = [{ uf, nome, valor, unidade, participacao, mapaRotulo? }]
+   * Entradas cuja sigla não existe na malha são ignoradas sem erro — é o caso
+   * de linhas agregadas como "Demais estados".
    */
-  function mapaBrasil(pontos) {
-    pontos = (pontos || []).filter(function (p) {
-      return p.mapa && typeof p.mapa.x === 'number' && typeof p.mapa.y === 'number';
+  function mapaBrasil(regioes) {
+    var malha = window.MALHA_UF;
+    if (!malha || !malha.estados) return '';
+    var estados = malha.estados;
+
+    var destaque = {};
+    var max = 0;
+    (regioes || []).forEach(function (rg) {
+      var uf = String(rg.uf || '').toUpperCase();
+      if (!estados[uf]) return;
+      destaque[uf] = rg;
+      var p = rg.participacao || 0;
+      if (p > max) max = p;
     });
 
-    var svg = '<svg viewBox="-3 -4 108 108" role="img" ' +
-              'aria-label="Mapa esquemático do Brasil com os principais estados produtores">';
-    svg += '<path class="mapa__silhueta" d="' + BRASIL + '"/>';
+    var formas = '', rotulos = '';
 
-    pontos.forEach(function (p, i) {
-      svg += '<g class="mapa__ponto">' +
-             '<circle class="halo" cx="' + p.mapa.x + '" cy="' + p.mapa.y + '" r="2.3" ' +
-             'style="animation-delay:' + (i * 320) + 'ms"/>' +
-             '<circle class="nucleo" cx="' + p.mapa.x + '" cy="' + p.mapa.y + '" r="1.5"/>' +
-             '<text x="' + (p.mapa.x + 3.2) + '" y="' + (p.mapa.y + 1.3) + '">' +
-             esc(p.uf || p.nome || '') + '</text>' +
-             '<title>' + esc(p.nome || p.uf || '') + '</title>' +
-             '</g>';
+    Object.keys(estados).sort().forEach(function (uf) {
+      var e = estados[uf];
+      var rg = destaque[uf];
+      var n = 0;
+
+      if (rg) {
+        // Arredondamento (e não teto): com poucas UFs o teto empilharia quase
+        // todas no mesmo degrau. O líder cai sempre no degrau mais escuro.
+        var p = rg.participacao || 0;
+        n = (max > 0 && p > 0) ? Math.min(NIVEIS, Math.max(1, Math.round((p / max) * NIVEIS))) : 1;
+      }
+
+      // tooltip nativo: nome da UF e, quando houver, volume e participação
+      var titulo = e.nome;
+      if (rg) {
+        var partes = [];
+        if (typeof rg.valor === 'number') {
+          partes.push(num(rg.valor) + (rg.unidade ? ' ' + rg.unidade : ''));
+        }
+        if (typeof rg.participacao === 'number') {
+          partes.push(num(rg.participacao) + '%');
+        }
+        if (partes.length) titulo += ' — ' + partes.join(' · ');
+      }
+
+      formas += '<path class="mapa__uf n' + n + '" d="' + e.d + '" ' +
+                'fill-rule="evenodd"><title>' + esc(titulo) + '</title></path>';
+
+      if (rg) {
+        var pos = rg.mapaRotulo || e.rotulo;
+        rotulos += '<text class="mapa__rotulo' + (n >= 4 ? ' is-claro' : '') + '" ' +
+                   'x="' + pos.x + '" y="' + r(pos.y + 0.9) + '">' + esc(uf) + '</text>';
+      }
     });
 
-    return svg + '</svg>';
+    return '<svg viewBox="' + esc(malha.viewBox) + '" role="img" aria-label="' +
+           'Mapa do Brasil com os estados produtores destacados por participação">' +
+           '<g class="mapa__formas">' + formas + '</g>' +
+           '<g class="mapa__rotulos">' + rotulos + '</g>' +
+           '</svg>';
   }
+
+  /** Degraus da escala, para a legenda em HTML. */
+  function niveisMapa() { return NIVEIS; }
 
   /* ------------------------------------------------------------- exportação */
 
@@ -360,6 +392,7 @@
     barras: barras,
     rendimento: rendimento,
     fluxograma: fluxograma,
-    mapaBrasil: mapaBrasil
+    mapaBrasil: mapaBrasil,
+    niveisMapa: niveisMapa
   };
 })();

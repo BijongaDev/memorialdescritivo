@@ -50,15 +50,46 @@
     }, 0) || 1;
   }
 
-  /** Rodapé discreto de fontes de uma seção. */
+  /** Chave de deduplicação de uma fonte. */
+  function chaveFonte(f) {
+    return [f.org || '', f.serie || '', f.ano || ''].join('|');
+  }
+
+  /**
+   * Junta listas de fontes removendo repetições, preservando a ordem de
+   * aparição. Aceita qualquer número de arrays (ou undefined).
+   */
+  function juntarFontes() {
+    var vistas = {}, saida = [];
+    for (var i = 0; i < arguments.length; i++) {
+      (arguments[i] || []).forEach(function (f) {
+        if (!f || !f.org) return;
+        var k = chaveFonte(f);
+        if (vistas[k]) return;
+        vistas[k] = true;
+        saida.push(f);
+      });
+    }
+    return saida;
+  }
+
+  function textoFonte(f) {
+    var partes = [];
+    if (f.serie) partes.push(esc(f.serie));
+    if (f.ano) partes.push(esc(f.ano));
+    return '<b>' + esc(f.org) + '</b>' +
+           (partes.length ? ' · ' + partes.join(' · ') : '');
+  }
+
+  /**
+   * Rodapé de fontes de uma seção. Fica FORA do wrapper .revelar de propósito:
+   * a atribuição nunca depende de animação para aparecer, e sobrevive à
+   * impressão em PDF (ver @media print).
+   */
   function blocoFontes(fontes) {
     if (!fontes || !fontes.length) return '';
     var itens = fontes.map(function (f) {
-      var partes = [];
-      if (f.serie) partes.push(esc(f.serie));
-      if (f.ano) partes.push(esc(f.ano));
-      return '<span><b>' + esc(f.org) + '</b>' +
-             (partes.length ? ' · ' + partes.join(' · ') : '') + '</span>';
+      return '<span>' + textoFonte(f) + '</span>';
     }).join('');
     return '<div class="secao__fontes">' +
            '<span class="secao__fontes-rotulo">Fontes</span>' + itens + '</div>';
@@ -73,13 +104,18 @@
            '</div>';
   }
 
-  function envolveSecao(id, indice, dados, corpoHtml) {
+  /**
+   * @param {Array} [fontesExtra] fontes de assets usados na renderização
+   *   (ex.: a malha do IBGE). Entram sempre, sem precisar ser repetidas no
+   *   arquivo de dados de cada grupo.
+   */
+  function envolveSecao(id, indice, dados, corpoHtml, fontesExtra) {
     return '<section class="secao" id="' + esc(id) + '" ' +
            'aria-labelledby="' + esc(id) + '-t">' +
            cabecaSecao(indice, dados.titulo, dados.intro).replace(
              '<h3>', '<h3 id="' + esc(id) + '-t">') +
            '<div class="secao__corpo revelar">' + corpoHtml + '</div>' +
-           blocoFontes(dados.fontes) +
+           blocoFontes(juntarFontes(dados.fontes, fontesExtra)) +
            '</section>';
   }
 
@@ -147,8 +183,18 @@
              '</li>';
     }).join('');
 
+    // Escala do coroplético. Os degraus usam as mesmas classes n1..n5 do SVG.
+    var degraus = '';
+    for (var n = 1; n <= window.CHARTS.niveisMapa(); n++) {
+      degraus += '<i class="n' + n + '"></i>';
+    }
+    var escala = '<div class="mapa__escala">' +
+                 '<span>menor</span>' +
+                 '<span class="mapa__escala-degraus">' + degraus + '</span>' +
+                 '<span>maior participação</span></div>';
+
     var corpo = '<div class="origem">' +
-                '<figure class="mapa">' + window.CHARTS.mapaBrasil(regioes) +
+                '<figure class="mapa">' + window.CHARTS.mapaBrasil(regioes) + escala +
                 (d.legendaMapa
                   ? '<figcaption class="mapa__legenda">' + esc(d.legendaMapa) + '</figcaption>'
                   : '') +
@@ -156,7 +202,12 @@
                 '<ul class="regioes">' + lista + '</ul>' +
                 '</div>';
 
-    return envolveSecao(id, 1, d, corpo);
+    // A malha é do IBGE: a atribuição entra automaticamente, para não depender
+    // de cada arquivo de dados lembrar de citá-la.
+    var fonteMalha = window.MALHA_UF && window.MALHA_UF.fonte
+      ? [window.MALHA_UF.fonte] : null;
+
+    return envolveSecao(id, 1, d, corpo, fonteMalha);
   }
 
   /* ------------------------------------------ 4. §2 fluxograma de produção */
@@ -319,7 +370,56 @@
     return envolveSecao(id, 5, d, '<div class="mercados">' + colunas + '</div>');
   }
 
-  /* --------------------------------------------------------------- 8. rodapé */
+  /* ------------------------------------------------- 8. fontes consolidadas */
+
+  /**
+   * Lista completa das fontes do memorial, no fim da página.
+   * Repete de propósito o que já aparece no rodapé de cada seção: quem lê uma
+   * seção isolada vê a atribuição ali, e quem imprime ou encaminha o material
+   * inteiro leva a lista fechada num só lugar.
+   */
+  function fontesGerais(d, extras) {
+    var fontes = juntarFontes(
+      d.origem && d.origem.fontes,
+      d.processo && d.processo.fontes,
+      d.coprodutos && d.coprodutos.fontes,
+      d.balanco && d.balanco.fontes,
+      d.mercados && d.mercados.fontes,
+      extras
+    );
+    if (!fontes.length) return '';
+
+    // agrupa por instituição, preservando a ordem de aparição
+    var ordem = [], porOrg = {};
+    fontes.forEach(function (f) {
+      if (!porOrg[f.org]) { porOrg[f.org] = []; ordem.push(f.org); }
+      porOrg[f.org].push(f);
+    });
+
+    var itens = ordem.map(function (org) {
+      var series = porOrg[org].map(function (f) {
+        var partes = [];
+        if (f.serie) partes.push(esc(f.serie));
+        if (f.ano) partes.push(esc(f.ano));
+        return '<li>' + (partes.length ? partes.join(' · ') : '—') + '</li>';
+      }).join('');
+      return '<div class="fonte-org">' +
+             '<p class="fonte-org__nome">' + esc(org) + '</p>' +
+             '<ul class="fonte-org__series">' + series + '</ul></div>';
+    }).join('');
+
+    return '<section class="fontes-gerais"><div class="container">' +
+           '<p class="eyebrow">Procedência dos dados</p>' +
+           '<h4>Fontes citadas neste memorial</h4>' +
+           '<div class="fontes-gerais__grade">' + itens + '</div>' +
+           '<p class="fontes-gerais__nota">' +
+           'Séries de terceiros, sujeitas a revisão pelas próprias entidades ' +
+           'emissoras. O ano indicado é o da edição consultada, não ' +
+           'necessariamente o da última publicada.' +
+           '</p></div></section>';
+  }
+
+  /* --------------------------------------------------------------- 9. rodapé */
 
   function pe(slug, grupos) {
     var atalhos = (grupos || []).filter(function (g) {
@@ -340,7 +440,7 @@
            '</div></div>';
   }
 
-  /* ------------------------------------------------------- 9. montagem final */
+  /* ------------------------------------------------------ 10. montagem final */
 
   /**
    * Monta o memorial completo.
@@ -376,13 +476,14 @@
                navSecoes(slug, indice) +
                '<div class="memorial__secoes">' + secoes + '</div>' +
                '</div>' +
+               fontesGerais(d, window.MALHA_UF && d.origem ? [window.MALHA_UF.fonte] : null) +
                pe(slug, grupos) +
                '</article>';
 
     return elemento(html);
   }
 
-  /* --------------------------------------------------------- 10. card do hub */
+  /* --------------------------------------------------------- 11. card do hub */
 
   var SETA = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" ' +
              'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ' +
