@@ -15,6 +15,8 @@
    • Percentuais são NUMBER de 0 a 100.
    • Campos marcados [opcional] podem ser omitidos ou receber [] — o render
      simplesmente não desenha o bloco.
+   • Quando um percentual não tiver base real, OMITA o campo em vez de
+     estimar. O render lida com a ausência; um número inventado, não.
    • Cada seção tem `fontes: []`. Nenhum número entra sem fonte + ano.
    • A ordem das 5 seções é fixa: origem, processo, coprodutos, balanco,
      mercados. Os títulos são editáveis por grupo.
@@ -61,7 +63,11 @@ window.MEMORIAL_SCHEMA = {
         uf: 'MT',                       // [opcional] sigla; pinta a UF no mapa
         valor: 39.4,                    // [opcional] volume
         unidade: 'Mt',                  // [opcional]
-        participacao: 26.7,             // 0–100: barra da lista + cor no mapa
+        participacao: 26.7,             // [opcional] 0–100: barra da lista + cor
+                                        // no mapa. SEM o campo, não há barra nem
+                                        // "% do total" — use assim quando os itens
+                                        // não forem comparáveis entre si (ver
+                                        // data/outros.js)
         detalhe: 'Uma frase de contexto.',   // [opcional]
         mapaRotulo: { x: 47, y: 45 }     // [opcional] só para deslocar o rótulo
                                          // de uma UF pequena; o padrão é o
@@ -180,7 +186,9 @@ window.MEMORIAL_SCHEMA = {
     setores: [                          // [opcional]
       {
         nome: 'Biodiesel',
-        participacao: 57,               // 0–100
+        participacao: 57,               // [opcional] 0–100. Sem o campo, o cartão
+                                        // sai sem número e sem barra — para grupos
+                                        // cujos setores não têm base comum
         descricao: 'Uma frase.'
       }
     ],

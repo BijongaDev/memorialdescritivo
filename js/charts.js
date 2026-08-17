@@ -7,13 +7,19 @@
 
    API pública (window.CHARTS):
      num(v, dec)           formata número em pt-BR
+     esc(s)                escapa texto para HTML/SVG
      barras(cfg)           gráfico de barras verticais
      rendimento(cfg)       balanço de massa (entrada -> fitas -> saídas)
-     fluxograma(etapas)    fluxograma horizontal animado
-     mapaBrasil(pontos)    mapa esquemático do Brasil com pontos
+     fluxograma(etapas)    fluxograma horizontal animado; serve também à rota
+                           de importação da §1 dos grupos importados
+     mapaBrasil(regioes)   coroplético sobre a malha estadual do IBGE
+                           (data/malha-uf.js). Devolve '' se nenhuma entrada
+                           casar com uma UF — é como um grupo de produto
+                           importado fica sem mapa
+     niveisMapa()          nº de degraus da escala, para a legenda em HTML
 
-   As animações são feitas em CSS (ver css/style.css, seções 11–14): este
-   módulo só emite as classes e os `transition-delay` escalonados.
+   As animações são feitas em CSS (ver css/style.css): este módulo só emite as
+   classes e os `transition-delay` escalonados.
    ========================================================================= */
 
 (function () {

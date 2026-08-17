@@ -31,7 +31,6 @@
   --texto:            var(--navy);
   --texto-suave:      var(--navy-400);
   --linha:            var(--cinza-200);
-  --acento:           var(--amarelo);
 
   /* Paleta para séries de dados (fluxos, barras, rendimentos) */
   --serie-1: #14204A;
@@ -62,7 +61,6 @@
   /* Formas */
   --r-sm: 6px;
   --r-md: 12px;
-  --r-lg: 20px;
   --sombra-1: 0 1px 2px rgba(20, 32, 74, .06),
               0 2px 8px rgba(20, 32, 74, .04);
   --sombra-2: 0 2px 4px rgba(20, 32, 74, .07),
@@ -127,29 +125,12 @@ a { color: inherit; text-decoration: none; }
   padding-inline: var(--gutter);
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
-
 .eyebrow {
   font-size: .75rem;
   font-weight: 600;
   letter-spacing: .14em;
   text-transform: uppercase;
   color: var(--texto-suave);
-}
-
-.regua {
-  width: 44px;
-  height: 3px;
-  background: var(--amarelo);
-  border-radius: 2px;
 }
 
 /* Contêiner de SVG de dados. Em telas estreitas o gráfico para de encolher e

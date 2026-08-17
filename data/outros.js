@@ -42,11 +42,15 @@ window.MEMORIAIS['outros'] = {
     'dos granéis grandes e testam o que o terminal sabe fazer: segregar, ' +
     'limpar e certificar linha para um produto que nunca passou por ela.',
 
+  /* Só três destaques, e todos rastreáveis a uma fonte. Um quarto número
+     existia aqui apenas como figura de linguagem ("basta 1 carga para exigir
+     linha dedicada"); num painel em que todo número carrega fonte e ano, isso
+     confunde retórica com dado. O argumento continua — no resumo e na §2, em
+     texto, onde é honesto. */
   destaques: [
-    { valor: 6,   unidade: 'grupos', rotulo: 'Já classificam a maior parte do movimentado', decimais: 0 },
-    { valor: 400, unidade: 'mil t',  rotulo: 'Glicerina bruta gerada pelo biodiesel brasileiro', decimais: 0 },
-    { valor: 1,   unidade: 'carga',  rotulo: 'Basta uma para exigir linha dedicada e laudo', decimais: 0 },
-    { valor: 100, unidade: '%',      rotulo: 'Das cargas exigem plano de limpeza específico', decimais: 0 }
+    { valor: 780, unidade: 'mil t', rotulo: 'Glicerina bruta gerada pelo biodiesel brasileiro', decimais: 0 },
+    { valor: 250, unidade: 'mil t', rotulo: 'Ácidos graxos e borras do refino de óleos vegetais', decimais: 0 },
+    { valor: 200, unidade: 'mil t', rotulo: 'Melaço excedente da cadeia sucroalcooleira', decimais: 0 }
   ],
 
   /* -------------------------------------------- §1 origem da matéria-prima */
@@ -282,8 +286,8 @@ window.MEMORIAIS['outros'] = {
     indicadores: [
       {
         rotulo: 'Glicerina bruta',
-        valor: 400, unidade: 'mil t', decimais: 0, cor: 'var(--serie-1)',
-        nota: 'Estimada a partir de 9 bi L de biodiesel e ~10% de rendimento.'
+        valor: 780, unidade: 'mil t', decimais: 0, cor: 'var(--serie-1)',
+        nota: '9,0 bi L de biodiesel, densidade 0,88, rendimento de ~10% em massa.'
       },
       {
         rotulo: 'Ácidos graxos do refino',
@@ -307,7 +311,7 @@ window.MEMORIAIS['outros'] = {
       unidade: 'mil t',
       decimais: 0,
       barras: [
-        { rotulo: 'Glicerina bruta',   valor: 400, cor: 'var(--serie-1)' },
+        { rotulo: 'Glicerina bruta',   valor: 780, cor: 'var(--serie-1)' },
         { rotulo: 'Ácidos graxos',     valor: 250, cor: 'var(--serie-2)' },
         { rotulo: 'Melaço',            valor: 200, cor: 'var(--serie-3)' },
         { rotulo: 'Especialidades',    valor: 150, cor: 'var(--serie-4)' }

@@ -12,9 +12,10 @@
      • os destinos de exportação de etanol (§5) mudam MUITO de ano para ano —
        o ranking responde a política tarifária de cada país e a arbitragem de
        preço, não a relação comercial estável. Confira sempre o ano corrente;
-     • a destinação da produção por uso (§5) é estimativa que combina etanol
-       e biodiesel numa base comum de litros, o que nenhuma entidade publica
-       de forma consolidada;
+     • a destinação da produção por uso (§5) combina etanol e biodiesel numa
+       base comum de 44,4 bi L (35,4 + 9,0), para que as duas cadeias apareçam
+       na mesma régua. Nenhuma entidade publica esse recorte consolidado — a
+       base está declarada no texto da seção justamente para ser conferível;
      • a divisão da produção de etanol por estado (§1) mistura rota de cana e
        rota de milho. Mato Grosso aparece alto por milho, não por cana — está
        dito no detalhe do estado, e precisa continuar dito.
@@ -406,10 +407,12 @@ window.MEMORIAIS['biocombustiveis'] = {
       'Quase todo o biocombustível brasileiro é queimado dentro do Brasil, em ' +
       'motores que a própria regulação moldou: o carro flex absorve o etanol ' +
       'hidratado, a gasolina C carrega o anidro e o diesel B carrega o biodiesel. ' +
-      'A exportação é a fatia menor e a mais volátil — o ranking de destinos ' +
-      'abaixo muda de um ano para o outro conforme tarifa e arbitragem de preço, ' +
-      'e não conforme relação comercial estabelecida. É o grupo em que a lista ' +
-      'de países envelhece mais rápido, e o que mais pede atualização.',
+      'Os percentuais abaixo são calculados sobre a soma de etanol e biodiesel — ' +
+      '44,4 bilhões de litros —, e não sobre cada cadeia isolada, para que as ' +
+      'duas apareçam na mesma régua. A exportação é a fatia menor e a mais ' +
+      'volátil: o ranking de destinos muda de um ano para o outro conforme tarifa ' +
+      'e arbitragem de preço, não conforme relação comercial estabelecida. É a ' +
+      'lista que envelhece mais rápido do projeto.',
 
     tituloSetores: 'Destinação da produção',
     tituloDestinos: 'Destinos da exportação de etanol',
@@ -417,32 +420,32 @@ window.MEMORIAIS['biocombustiveis'] = {
     setores: [
       {
         nome: 'Frota flex — etanol hidratado',
-        participacao: 38,
+        participacao: 38.3,   // 17,0 bi L
         descricao: 'Vendido direto na bomba. Concorre com a gasolina a cada ' +
                    'abastecimento, o que torna a demanda sensível a preço na ' +
                    'semana, não no ano.'
       },
       {
-        nome: 'Diesel B — biodiesel',
-        participacao: 25,
-        descricao: 'Mistura obrigatória no diesel. Demanda definida por regulação, ' +
-                   'imune a preço relativo.'
-      },
-      {
         nome: 'Gasolina C — etanol anidro',
-        participacao: 24,
+        participacao: 30.2,   // 13,4 bi L
         descricao: 'Mistura obrigatória na gasolina, hoje em torno de 27%. Piso ' +
                    'firme de demanda, independente da escolha do motorista.'
       },
       {
+        nome: 'Diesel B — biodiesel',
+        participacao: 20.3,   // 9,0 bi L
+        descricao: 'Mistura obrigatória no diesel. Demanda definida por regulação, ' +
+                   'imune a preço relativo.'
+      },
+      {
         nome: 'Química, bebidas e higiene',
-        participacao: 7,
+        participacao: 5.6,   // 2,5 bi L
         descricao: 'Etanol neutro e industrial para bebidas, cosméticos, ' +
                    'desinfetantes e insumo químico.'
       },
       {
         nome: 'Exportação',
-        participacao: 6,
+        participacao: 5.6,   // 2,5 bi L
         descricao: 'Válvula do sistema: cresce quando o mercado externo paga ' +
                    'prêmio sobre o interno.'
       }

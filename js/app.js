@@ -28,7 +28,8 @@
     contagem:  document.getElementById('contagem-grupos'),
     titulo:    document.getElementById('topo-titulo'),
     voltar:    document.getElementById('btn-voltar'),
-    progresso: document.getElementById('progresso-barra')
+    progresso: document.getElementById('progresso-barra'),
+    peFontes:  document.getElementById('pe-fontes')
   };
 
   var grupos = window.GRUPOS || [];
@@ -76,6 +77,38 @@
       el.contagem.textContent = grupos.length + ' grupos · ' + prontos +
         (prontos === 1 ? ' memorial publicado' : ' memoriais publicados');
     }
+  }
+
+  /**
+   * Rodapé global: reúne as instituições citadas em todos os memoriais
+   * carregados, sem repetição. Gerado em vez de escrito à mão no HTML — uma
+   * lista fixa envelhece a cada grupo novo e passa a mentir sobre o que o
+   * material de fato usa.
+   */
+  function montarFontesGlobais() {
+    if (!el.peFontes) return;
+    var vistas = {}, orgs = [];
+
+    Object.keys(memoriais).forEach(function (slug) {
+      var d = memoriais[slug];
+      ['origem', 'processo', 'coprodutos', 'balanco', 'mercados'].forEach(function (k) {
+        ((d[k] && d[k].fontes) || []).forEach(function (f) {
+          if (!f.org || vistas[f.org]) return;
+          vistas[f.org] = true;
+          orgs.push(f.org);
+        });
+      });
+    });
+
+    // a malha do IBGE é usada na renderização, não declarada nos dados
+    if (window.MALHA_UF && window.MALHA_UF.fonte && !vistas[window.MALHA_UF.fonte.org]) {
+      orgs.push(window.MALHA_UF.fonte.org);
+    }
+
+    orgs.sort(function (a, b) { return a.localeCompare(b, 'pt-BR'); });
+    el.peFontes.innerHTML = orgs.map(function (o) {
+      return '<span>' + o.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</span>';
+    }).join(' · ');
   }
 
   /* --------------------------------------------------- 2. observers do memorial */
@@ -322,6 +355,7 @@
   function iniciar() {
     if (!el.hub || !el.memorial) return;
     montarHub();
+    montarFontesGlobais();
     ligarEventos();
     el.body.setAttribute('data-view', 'hub');
     el.hub.classList.add('is-ativa');

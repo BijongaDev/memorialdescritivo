@@ -338,13 +338,14 @@ window.MEMORIAIS['metanol'] = {
         { rotulo: 'Importação',       valor: 1.30, cor: 'var(--serie-2)' },
         { rotulo: 'Biodiesel',        valor: 0.80, cor: 'var(--serie-4)' },
         { rotulo: 'Formaldeído',      valor: 0.34, cor: 'var(--serie-3)' },
-        { rotulo: 'Outros usos',      valor: 0.26, cor: 'var(--serie-3)' },
+        { rotulo: 'Solventes e outros', valor: 0.26, cor: 'var(--serie-3)' },
         { rotulo: 'Produção nacional', valor: 0.10, cor: 'var(--serie-5)' }
       ],
       legenda:
-        'Biodiesel, formaldeído e outros usos são as parcelas do consumo aparente, ' +
-        'não somas adicionais. Importação e produção nacional são os dois lados da ' +
-        'oferta. Valores em milhões de toneladas.'
+        'As três últimas barras são parcelas do consumo aparente, não somas ' +
+        'adicionais — "solventes e outros" reúne os dois últimos setores da seção 5. ' +
+        'Importação e produção nacional são os dois lados da oferta. Valores em ' +
+        'milhões de toneladas.'
     },
 
     notas: [

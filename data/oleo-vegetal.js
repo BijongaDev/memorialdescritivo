@@ -303,13 +303,15 @@ window.MEMORIAIS['oleo-vegetal'] = {
         { rotulo: 'Produção',    valor: 11.0, cor: 'var(--serie-1)' },
         { rotulo: 'Consumo',     valor: 9.7,  cor: 'var(--serie-2)' },
         { rotulo: 'Biodiesel',   valor: 5.5,  cor: 'var(--serie-4)' },
-        { rotulo: 'Alimentar',   valor: 4.2,  cor: 'var(--serie-3)' },
+        { rotulo: 'Demais usos', valor: 4.2,  cor: 'var(--serie-3)' },
         { rotulo: 'Exportação',  valor: 1.3,  cor: 'var(--serie-3)' },
         { rotulo: 'Importação',  valor: 0.1,  cor: 'var(--serie-5)' }
       ],
       legenda:
-        'Biodiesel e alimentar são as duas parcelas do consumo doméstico, não somas ' +
-        'adicionais. Valores em milhões de toneladas.'
+        'Biodiesel e demais usos são as duas parcelas do consumo doméstico, não ' +
+        'somas adicionais — "demais usos" reúne alimentar, industrial e ração, os ' +
+        'três setores não energéticos detalhados na seção 5. Valores em milhões de ' +
+        'toneladas.'
     },
 
     notas: [

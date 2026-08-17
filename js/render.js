@@ -9,8 +9,9 @@
      1 origem · 2 processo · 3 coprodutos · 4 balanco · 5 mercados
 
    API pública (window.RENDER):
-     memorial(dados)   -> HTMLElement pronto para inserir no DOM
-     cardHub(grupo)    -> HTMLElement do card do hub
+     memorial(dados, grupos) -> HTMLElement pronto para inserir no DOM
+                                (`grupos` alimenta os atalhos do rodapé)
+     cardHub(grupo)          -> HTMLElement do card do hub
    ========================================================================= */
 
 (function () {
