@@ -50,7 +50,7 @@ window.GRUPOS = [
     descricao: 'Hidróxido de sódio em solução: celulose, alumina, saneamento ' +
                'e indústria química.',
     chip: 'Cloro-álcalis',
-    status: 'breve'
+    status: 'pronto'
   },
   {
     slug: 'biocombustiveis',
